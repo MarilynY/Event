@@ -41,7 +41,6 @@ public class SearchItem extends HttpServlet {
 			try {
 				array.put(new JSONObject().put("username", "Donghan"));
 				array.put(new JSONObject().put("age", 28));
-				
 			} catch (JSONException e){
 				e.printStackTrace();
 			}
