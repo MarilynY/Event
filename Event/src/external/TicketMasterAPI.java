@@ -44,8 +44,12 @@ public class TicketMasterAPI {
 			e.printStackTrace();
 		}
 		
+		//transfer lat and lon to geohash
+		String geoHash = GeoHash.encodeGeohash(lat, lon, 8);
+		
 		// query should looks like: "apikey=qqPuP6n3ivMUoT9fPgLepkRMreBcbrjV&latlong=37,-120&keyword=event&radius=50"
-		String query = String.format("apikey=%s&latlong=%s,%s&keyword=%s&radius=%s", API_KEY, lat, lon, keyword, 50);
+		//use geoPoint instead of lat and lon because TicketMaster prefer geoPoint
+		String query = String.format("apikey=%s&geoPoint=%s&keyword=%s&radius=%s", API_KEY, geoHash, keyword, 50);
 		String url = URL + "?" + query;
 		
 		try {
