@@ -73,7 +73,9 @@ public class TicketMasterAPI {
 			//Extract events array only
 			JSONObject obj = new JSONObject(response.toString());
 			if (!obj.isNull("_embedded")) {
+				//return type of embedded is JSONObject(seen from TicketMaster website)
 				JSONObject embedded = obj.getJSONObject("_embedded");
+				//return type of events is JSONArray
 				return embedded.getJSONArray("events");
 			}
 		} catch (Exception e) {
