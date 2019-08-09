@@ -78,6 +78,7 @@ public class Item {
 	}
 	
 	//use Builder Pattern to set Item, such that setters are not exposed to users
+	//This is actually the constructor to instantiate an Item instance
 	public static class ItemBuilder {
 		private String itemId;
 		private String name;
