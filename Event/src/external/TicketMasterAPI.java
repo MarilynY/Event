@@ -24,7 +24,7 @@ public class TicketMasterAPI {
 	private static final String DEFAULT_KEYWORD = ""; //no restriction return all events
 	private static final String API_KEY = Config.TicketMasterAPI_KEY;
 	
-	public JSONArray search(double lat, double lon, String keyword) {
+	public List<Item> search(double lat, double lon, String keyword) {
 		//if client submit keyword then use it 
 		//else set keyword to DEFAULT_KEYWORD
 		if (keyword == null) {
@@ -62,7 +62,7 @@ public class TicketMasterAPI {
 			
 			if (responseCode != 200) {
 				System.out.println("error status code is " + responseCode);
-				return new JSONArray();
+				return new ArrayList<>();
 			}
 			
 			//if response code is 200, then we can go ahead read the data
@@ -79,19 +79,19 @@ public class TicketMasterAPI {
 			//close the BufferReader after reading the input stream/response data
 			reader.close();
 			
-			//Extract events array only
 			JSONObject obj = new JSONObject(response.toString());
 			if (!obj.isNull("_embedded")) {
 				//return type of embedded is JSONObject(seen from TicketMaster website)
 				JSONObject embedded = obj.getJSONObject("_embedded");
-				//return type of events is JSONArray
-				return embedded.getJSONArray("events");
+				
+				//call getItemList function
+				return getItemList(embedded.getJSONArray("events"));
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new JSONArray();
+		return new ArrayList<>();
 	}
 	
 	//use Item class in TicketMasterAPI to get clean data
@@ -122,7 +122,8 @@ public class TicketMasterAPI {
 			builder.setAddress(getAddress(event));
 			builder.setImageUrl(getImageUrl(event));
 			builder.setCategories(getCategories(event));
-			//put the item
+			
+			//put the item into itemList
 			itemList.add(builder.build());
 		}
 		return itemList;
@@ -214,15 +215,10 @@ public class TicketMasterAPI {
 	
 	
 	private void queryAPI(double lat, double lon) {
-		JSONArray events = search(lat, lon, null);
+		List<Item> events = search(lat, lon, null);
 		
-		try {
-			for (int i = 0; i < events.length(); i++) {
-				JSONObject event = events.getJSONObject(i);
-				System.out.println(event.toString(2));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		for (Item event : events) {
+			System.out.println(event.toJSONObject());
 		}
 	}
 	public static void main(String[] args) {
