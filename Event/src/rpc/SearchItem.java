@@ -2,6 +2,7 @@ package rpc;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import entity.Item;
+import external.TicketMasterAPI;
 
 /**
  * Servlet implementation class SearchItem
@@ -32,21 +36,20 @@ public class SearchItem extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.setContentType("application/json");
+		double lat = Double.parseDouble(request.getParameter("lat"));
+		double lon = Double.parseDouble(request.getParameter("lon"));
 		
-		PrintWriter out = response.getWriter();
+		TicketMasterAPI api = new TicketMasterAPI();
+		List<Item> items = api.search(lat, lon, null);
 		
+		JSONArray array = new JSONArray();
+		for (Item item : items) {
+			array.put(item.toJSONObject());
+		}
 		
-			JSONArray array = new JSONArray();
-			try {
-				array.put(new JSONObject().put("username", "Donghan"));
-				array.put(new JSONObject().put("age", 28));
-			} catch (JSONException e){
-				e.printStackTrace();
-			}
-		out.print(array);
-		
-		out.close();
+		//it is a static method, so class name can call it directly
+		//This helper function put the array to out, then convert it to JSONArray
+		RpcHelper.writeJsonArray(response, array);
 	}
 
 	/**
