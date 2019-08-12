@@ -36,13 +36,44 @@ public class MySQLConnection implements DBConnection {
 	@Override
 	public void setFavoriteItems(String userId, List<String> itemIds) {
 		// TODO Auto-generated method stub
-
+		if (conn == null) {
+			System.err.println("DB Connection failed");
+			return;
+		}
+		try {
+			//assign columns then fill in values
+			String sql = "INSERT IGNORE INTO history(user_id, item_id) VALUES (?, ?)";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, userId);
+			//add multiple categories 
+			for (String itemId : itemIds) {
+				ps.setString(2, itemId);
+				ps.execute();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void unsetFavoriteItems(String userId, List<String> itemIds) {
 		// TODO Auto-generated method stub
-
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return;
+		}
+		try {
+			String sql = "DELETE FROM history WHERE user_id = ? AND item_id = ? ";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, userId);
+			//delete multiple categories 
+			for (String itemId : itemIds) {
+				ps.setString(2, itemId);
+				ps.execute();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -63,6 +94,7 @@ public class MySQLConnection implements DBConnection {
 		return null;
 	}
 
+	//For searchItem servlet
 	@Override
 	public List<Item> searchItems(double lat, double lon, String term) {
 		// TODO Auto-generated method stub
@@ -75,7 +107,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		return items;
 	}
-
+	//For searchItem servlet
 	@Override
 	public void saveItem(Item item) {
 		// TODO Auto-generated method stub
@@ -96,6 +128,7 @@ public class MySQLConnection implements DBConnection {
 			ps.setDouble(7, item.getDistance());
 			ps.execute();
 			
+			//the table name must consistent with database, or the data will not be saved to table
 			sql = "INSERT IGNORE INTO categories VALUES (?, ?)";
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, item.getItemId());
@@ -106,7 +139,6 @@ public class MySQLConnection implements DBConnection {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override
