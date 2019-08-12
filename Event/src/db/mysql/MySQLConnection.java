@@ -6,8 +6,6 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Set;
 
-import org.json.JSONArray;
-
 import db.DBConnection;
 import entity.Item;
 import external.TicketMasterAPI;
@@ -82,11 +80,11 @@ public class MySQLConnection implements DBConnection {
 	public void saveItem(Item item) {
 		// TODO Auto-generated method stub
 		if (conn == null) {
-			System.err.println("DB connection error");
+			System.err.println("DB connection failed");
 			return;
 		}
 		try {
-			String sql = "INSERT IGNORE INTO Item VALUES (?, ?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT IGNORE INTO Items VALUES (?, ?, ?, ?, ?, ?, ?)";
 			//An object that represents a pre-compiled SQL statement.
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, item.getItemId());
@@ -98,7 +96,7 @@ public class MySQLConnection implements DBConnection {
 			ps.setDouble(7, item.getDistance());
 			ps.execute();
 			
-			sql = "INSERT IGNORE INTO Categories VALUES (?, ?)";
+			sql = "INSERT IGNORE INTO categories VALUES (?, ?)";
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, item.getItemId());
 			for (String category: item.getCategories()) {
