@@ -12,9 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 
-
+import db.DBConnection;
+import db.DBConnectionFactory;
 import entity.Item;
-import external.TicketMasterAPI;
+
 
 /**
  * Servlet implementation class SearchItem
@@ -37,18 +38,28 @@ public class SearchItem extends HttpServlet {
 		// TODO Auto-generated method stub
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
+		String term = request.getParameter("term");
 		
-		TicketMasterAPI api = new TicketMasterAPI();
-		List<Item> items = api.search(lat, lon, null);
 		
-		JSONArray array = new JSONArray();
-		for (Item item : items) {
-			array.put(item.toJSONObject());
-		}
+//		TicketMasterAPI api = new TicketMasterAPI();
+//		List<Item> items = api.search(lat, lon, null);
 		
-		//it is a static method, so class name can call it directly
-		//This helper function put the array to out, then convert it to JSONArray
-		RpcHelper.writeJsonArray(response, array);
+		//before we call TicketMasterAPI to get items
+		//now we call searchItem() in DBConnection to get Items 
+		DBConnection connection = DBConnectionFactory.getConnection();
+		try {
+			List<Item> items = connection.searchItems(lat, lon, term);
+			JSONArray array = new JSONArray();
+			for (Item item : items) {
+				array.put(item.toJSONObject());
+			}
+			RpcHelper.writeJsonArray(response, array);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}	
 	}
 
 	/**
