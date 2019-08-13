@@ -42,17 +42,10 @@ public class ItemHistory extends HttpServlet {
 		// TODO Auto-generated method stub
 		//Session Id verify
 		//allow access only if session exists
-		try {
-			HttpSession session = request.getSession(false);
-			JSONObject obj = new JSONObject();
-			if (session == null) {
-				response.setStatus(403);
-				obj.put("status", "Session Invalid");
-				RpcHelper.writeJsonObject(response, obj);
-				return;
-			} 
-		} catch (Exception e) {
-			e.printStackTrace();
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
 		} 
 		
 		String userId = request.getParameter("user_id");
@@ -63,7 +56,7 @@ public class ItemHistory extends HttpServlet {
 			Set<Item> items = conn.getFavoriteItems(userId);
 			for (Item item : items) {
 				JSONObject obj = item.toJSONObject();
-				//加这句话，是为了让前端知道这个是用户喜爱的，从而加心形
+				//used to tell front-end to change heart shape to solid 
 				obj.append("favorite", true);
 				array.put(obj);
 			}
@@ -84,18 +77,11 @@ public class ItemHistory extends HttpServlet {
 		// TODO Auto-generated method stub
 		//Session Id verify
 		//allow access only if session exists
-		try {
-			HttpSession session = request.getSession(false);
-			JSONObject obj = new JSONObject();
-			if (session == null) {
-				response.setStatus(403);
-				obj.put("status", "Session Invalid");
-				RpcHelper.writeJsonObject(response, obj);
-				return;
-			} 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
+		}  
 		
 		
 		DBConnection connection = DBConnectionFactory.getConnection();
@@ -126,17 +112,10 @@ public class ItemHistory extends HttpServlet {
 		// TODO Auto-generated method stub
 		//Session Id verify
 		//allow access only if session exists
-		try {
-			HttpSession session = request.getSession(false);
-			JSONObject obj = new JSONObject();
-			if (session == null) {
-				response.setStatus(403);
-				obj.put("status", "Session Invalid");
-				RpcHelper.writeJsonObject(response, obj);
-				return;
-			} 
-		} catch (Exception e) {
-			e.printStackTrace();
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
 		} 
 		
 		DBConnection connection = DBConnectionFactory.getConnection();
