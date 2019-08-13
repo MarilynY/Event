@@ -37,6 +37,9 @@ public class MySQLConnection implements DBConnection {
 		}
 	}
 	
+	
+	/*----------------------------------------------------------------------------------------------------------*/
+	
 	/*
 	 * setFavoriteItem
 	 */
@@ -83,7 +86,7 @@ public class MySQLConnection implements DBConnection {
 		}
 	}
 	
-	
+	/*----------------------------------------------------------------------------------------------------------*/
 	
 	/*
 	 *getFavoriteItem - show users all the items she favorited 
@@ -173,7 +176,7 @@ public class MySQLConnection implements DBConnection {
 		return categories;
 	}
 	
-	
+	/*----------------------------------------------------------------------------------------------------------*/
 	
 	/*
 	 * For searchItem servlet
@@ -190,6 +193,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		return items;
 	}
+	
 	//For searchItem servlet
 	@Override
 	public void saveItem(Item item) {
@@ -223,7 +227,7 @@ public class MySQLConnection implements DBConnection {
 			e.printStackTrace();
 		}
 	}
-
+/*----------------------------------------------------------------------------------------------------------*/
 	/*
 	 *Authentication
 	 */
@@ -266,6 +270,36 @@ public class MySQLConnection implements DBConnection {
 			while (rs.next()) {
 				return true;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/*----------------------------------------------------------------------------------------------------------*/
+	
+	/*
+	 * register
+	 */
+	@Override
+	public boolean registerUser(String userId, String password, String firstname, String lastname) {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+		if (conn == null) {
+			System.err.println("DB Connection failed");
+			return false;
+		}
+		try {
+			//assign columns then fill in values
+			String sql = "INSERT IGNORE INTO users (user_id, password, first_name, last_name) VALUES (?, ?, ?, ?)";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, userId);
+			ps.setString(2, password);
+			ps.setString(3, firstname);
+			ps.setString(4, lastname);
+			
+			return ps.executeUpdate() == 1; //return 1 -> insert return 0, userId duplicated
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
