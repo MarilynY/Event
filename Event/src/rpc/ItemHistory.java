@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +40,21 @@ public class ItemHistory extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		//Session Id verify
+		//allow access only if session exists
+		try {
+			HttpSession session = request.getSession(false);
+			JSONObject obj = new JSONObject();
+			if (session == null) {
+				response.setStatus(403);
+				obj.put("status", "Session Invalid");
+				RpcHelper.writeJsonObject(response, obj);
+				return;
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
 		String userId = request.getParameter("user_id");
 		JSONArray array = new JSONArray();
 		
@@ -66,6 +82,22 @@ public class ItemHistory extends HttpServlet {
 	//setFavoriteItem()
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		//Session Id verify
+		//allow access only if session exists
+		try {
+			HttpSession session = request.getSession(false);
+			JSONObject obj = new JSONObject();
+			if (session == null) {
+				response.setStatus(403);
+				obj.put("status", "Session Invalid");
+				RpcHelper.writeJsonObject(response, obj);
+				return;
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+		
 		DBConnection connection = DBConnectionFactory.getConnection();
 		
 		try {
@@ -92,6 +124,21 @@ public class ItemHistory extends HttpServlet {
 	//unsetFavoriteItems() very similar to setFavorite
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		//Session Id verify
+		//allow access only if session exists
+		try {
+			HttpSession session = request.getSession(false);
+			JSONObject obj = new JSONObject();
+			if (session == null) {
+				response.setStatus(403);
+				obj.put("status", "Session Invalid");
+				RpcHelper.writeJsonObject(response, obj);
+				return;
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
 		DBConnection connection = DBConnectionFactory.getConnection();
 		
 		try {

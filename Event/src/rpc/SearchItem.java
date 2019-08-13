@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import db.DBConnection;
 import db.DBConnectionFactory;
@@ -39,11 +40,18 @@ public class SearchItem extends HttpServlet {
 		// TODO Auto-generated method stub
 		//Session Id verify
 		//allow access only if session exists
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			response.setStatus(403);
-			return;
-		}
+		try {
+			HttpSession session = request.getSession(false);
+			JSONObject obj = new JSONObject();
+			if (session == null) {
+				response.setStatus(403);
+				obj.put("status", "Session Invalid");
+				RpcHelper.writeJsonObject(response, obj);
+				return;
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 	
 		
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
