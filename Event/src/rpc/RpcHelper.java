@@ -39,6 +39,7 @@ public class RpcHelper {
 	}
 	
 	//Parse a http request to JSONObject
+	//http request is from frontend which is in string type
 	public static JSONObject readJSONObject(HttpServletRequest request) {
 		StringBuilder sBuilder = new StringBuilder();
 		try (BufferedReader reader = request.getReader()){
