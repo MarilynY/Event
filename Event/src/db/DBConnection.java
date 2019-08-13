@@ -101,6 +101,6 @@ public interface DBConnection {
 	 * @param lastname
 	 * @return boolean
 	 */
-	public boolean verifyLogin(String userId, String password, String firstname, String lastname);
+	public boolean registerUser(String userId, String password, String firstname, String lastname);
 }
 
