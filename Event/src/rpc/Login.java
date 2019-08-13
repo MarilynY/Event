@@ -54,10 +54,12 @@ public class Login extends HttpServlet {
 		}
 	}
 
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	//check user's input (username and password) in the database or not
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//read username and password from http request body
@@ -82,7 +84,7 @@ public class Login extends HttpServlet {
 				obj.put("status", "OK").put("user_id", userId).put("name", connection.getFullname(userId));
 			} else {
 				response.setStatus(401); //unauthorized
-				obj.put("status : ", "User Doesn't Exist");
+				obj.put("status", "User Doesn't Exist");
 			}
 			RpcHelper.writeJsonObject(response, obj);
 		} catch (Exception e) {
@@ -91,5 +93,4 @@ public class Login extends HttpServlet {
 			connection.close();
 		}
 	}
-
 }

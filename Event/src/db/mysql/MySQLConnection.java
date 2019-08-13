@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -231,7 +232,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		String name = "";
 		try {
-			String sql = "SELECT first_name, last_name FROM user WHERE use_id = ?";
+			String sql = "SELECT first_name, last_name FROM users WHERE user_id = ? ";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, userId);
 			ResultSet rs = ps.executeQuery();
@@ -239,11 +240,12 @@ public class MySQLConnection implements DBConnection {
 			while (rs.next()) {
 				name = rs.getString("first_name") + " " + rs.getString("last_name");
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return name;
 	}
+	
 
 	@Override
 	public boolean verifyLogin(String userId, String password) {
@@ -253,7 +255,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		try {
 			//let database to handle matching userId and password
-			String sql = "SELECT * FROM user WHERE user_id = ? and password = ? ";
+			String sql = "SELECT * FROM users WHERE user_id = ? AND password = ? ";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, userId);
 			ps.setString(2, password);
@@ -266,5 +268,4 @@ public class MySQLConnection implements DBConnection {
 		}
 		return false;
 	}
-
 }
