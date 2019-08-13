@@ -3,6 +3,7 @@ package rpc;
 import java.io.IOException;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -40,18 +41,16 @@ public class SearchItem extends HttpServlet {
 		// TODO Auto-generated method stub
 		//Session Id verify
 		//allow access only if session exists
-		try {
-			HttpSession session = request.getSession(false);
-			JSONObject obj = new JSONObject();
-			if (session == null) {
-				response.setStatus(403);
-				obj.put("status", "Session Invalid");
-				RpcHelper.writeJsonObject(response, obj);
-				return;
-			} 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 	
+		
+		
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
+		} 
+		
+		//use userId to getFavoriteItemIds
+		String userId = session.getAttribute("user_id").toString();
 		
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
@@ -66,8 +65,17 @@ public class SearchItem extends HttpServlet {
 		DBConnection connection = DBConnectionFactory.getConnection();
 		try {
 			List<Item> items = connection.searchItems(lat, lon, term);
+			
+			//to get favoriteItemIds
+			Set<String> favoritedItemIds = connection.getFavoriteItemIds(userId);
+			
 			JSONArray array = new JSONArray();
 			for (Item item : items) {
+				
+				JSONObject obj = item.toJSONObject();
+				obj.put("favorite", favoritedItemIds.contains(item.getItemId()));
+				array.put(obj);
+				
 				array.put(item.toJSONObject());
 			}
 			RpcHelper.writeJsonArray(response, array);
