@@ -36,7 +36,10 @@ public class MySQLConnection implements DBConnection {
 			}
 		}
 	}
-
+	
+	/*
+	 * setFavoriteItem
+	 */
 	@Override
 	public void setFavoriteItems(String userId, List<String> itemIds) {
 		// TODO Auto-generated method stub
