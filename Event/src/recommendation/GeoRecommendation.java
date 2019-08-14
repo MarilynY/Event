@@ -54,3 +54,4 @@ public class GeoRecommendation {
 		return recommendedItems;
 	}
 }
+

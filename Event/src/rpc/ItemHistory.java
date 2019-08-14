@@ -10,7 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+//import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,11 +42,11 @@ public class ItemHistory extends HttpServlet {
 		// TODO Auto-generated method stub
 		//Session Id verify
 		//allow access only if session exists
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			response.setStatus(403);
-			return;
-		} 
+//		HttpSession session = request.getSession(false);
+//		if (session == null) {
+//			response.setStatus(403);
+//			return;
+//		} 
 		
 		String userId = request.getParameter("user_id");
 		JSONArray array = new JSONArray();
@@ -77,11 +77,11 @@ public class ItemHistory extends HttpServlet {
 		// TODO Auto-generated method stub
 		//Session Id verify
 		//allow access only if session exists
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			response.setStatus(403);
-			return;
-		}  
+//		HttpSession session = request.getSession(false);
+//		if (session == null) {
+//			response.setStatus(403);
+//			return;
+//		}  
 		
 		
 		DBConnection connection = DBConnectionFactory.getConnection();
@@ -112,11 +112,11 @@ public class ItemHistory extends HttpServlet {
 		// TODO Auto-generated method stub
 		//Session Id verify
 		//allow access only if session exists
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			response.setStatus(403);
-			return;
-		} 
+//		HttpSession session = request.getSession(false);
+//		if (session == null) {
+//			response.setStatus(403);
+//			return;
+//		} 
 		
 		DBConnection connection = DBConnectionFactory.getConnection();
 		
