@@ -10,7 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-//import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,17 +42,16 @@ public class SearchItem extends HttpServlet {
 		//Session Id verify
 		//allow access only if session exists
 		
-		
-//		HttpSession session = request.getSession(false);
-//		if (session == null) {
-//			response.setStatus(403);
-//			return;
-//		} 
-		
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
+		} 
 		//use userId to getFavoriteItemIds
-//		String userId = session.getAttribute("user_id").toString();
+		String userId = session.getAttribute("user_id").toString();
 		
-		String userId = request.getParameter("user_id");
+//		String userId = request.getParameter("user_id");
+		
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
 		String term = request.getParameter("term");
@@ -87,14 +86,4 @@ public class SearchItem extends HttpServlet {
 			connection.close();
 		}	
 	}
-
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-
 }
