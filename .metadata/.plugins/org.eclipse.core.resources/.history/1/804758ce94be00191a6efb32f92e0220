@@ -41,6 +41,7 @@ public class RecommendItem extends HttpServlet {
 		//Session Id verify
 		//allow access only if session exists
 		
+		
 		HttpSession session = request.getSession(false);
 		if (session == null) {
 			response.setStatus(403);
