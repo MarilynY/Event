@@ -13,10 +13,39 @@
    */
   function init() {
     // register event listeners
+    document.querySelector('#login-form-btn').addEventListener('click', onSessionInvalid);
+    document.querySelector('#login-btn').addEventListener('click', login);
+    document.querySelector('#register-form-btn').addEventListener('click', showRegisterForm);
+    document.querySelector('#register-btn').addEventListener('click', register);
     document.querySelector('#nearby-btn').addEventListener('click', loadNearbyItems);
     document.querySelector('#fav-btn').addEventListener('click', loadFavoriteItems);
     document.querySelector('#recommend-btn').addEventListener('click', loadRecommendedItems);
-    onSessionValid({"user_id":"1111","name":"John Smith","status":"OK"});
+    validateSession();
+    // onSessionValid({"user_id":"1111","name":"John Smith","status":"OK"});
+  }
+
+  /**
+   * Session
+   */
+  function validateSession() {
+    onSessionInvalid();
+    // The request parameters
+    var url = './login';
+    var req = JSON.stringify({});
+
+    // display loading message
+    showLoadingMessage('Validating session...');
+
+    // make AJAX call
+    ajax('GET', url, req,
+      // session is still valid
+      function(res) {
+        var result = JSON.parse(res);
+
+        if (result.status === 'OK') {
+          onSessionValid(result);
+        }
+      });
   }
 
   function onSessionValid(result) {
@@ -41,6 +70,27 @@
     hideElement(loginForm);
     hideElement(registerForm);
 
+    initGeoLocation();
+  }
+
+  function onSessionInvalid() {
+    var loginForm = document.querySelector('#login-form');
+    var registerForm = document.querySelector('#register-form');
+    var itemNav = document.querySelector('#item-nav');
+    var itemList = document.querySelector('#item-list');
+    var avatar = document.querySelector('#avatar');
+    var welcomeMsg = document.querySelector('#welcome-msg');
+    var logoutBtn = document.querySelector('#logout-link');
+
+    hideElement(itemNav);
+    hideElement(itemList);
+    hideElement(avatar);
+    hideElement(logoutBtn);
+    hideElement(welcomeMsg);
+    hideElement(registerForm);
+
+    clearLoginError();
+    showElement(loginForm);
   }
 
   function hideElement(element) {
@@ -50,6 +100,173 @@
   function showElement(element, style) {
     var displayStyle = style ? style : 'block';
     element.style.display = displayStyle;
+  }
+  
+  function showRegisterForm() {
+    var loginForm = document.querySelector('#login-form');
+    var registerForm = document.querySelector('#register-form');
+    var itemNav = document.querySelector('#item-nav');
+    var itemList = document.querySelector('#item-list');
+    var avatar = document.querySelector('#avatar');
+    var welcomeMsg = document.querySelector('#welcome-msg');
+    var logoutBtn = document.querySelector('#logout-link');
+
+    hideElement(itemNav);
+    hideElement(itemList);
+    hideElement(avatar);
+    hideElement(logoutBtn);
+    hideElement(welcomeMsg);
+    hideElement(loginForm);
+    
+    clearRegisterResult();
+    showElement(registerForm);
+  }  
+  
+
+  function initGeoLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        onPositionUpdated,
+        onLoadPositionFailed, {
+          maximumAge: 60000
+        });
+      showLoadingMessage('Retrieving your location...');
+    } else {
+      onLoadPositionFailed();
+    }
+  }
+
+  function onPositionUpdated(position) {
+    lat = position.coords.latitude;
+    lng = position.coords.longitude;
+
+    loadNearbyItems();
+  }
+
+  function onLoadPositionFailed() {
+    console.warn('navigator.geolocation is not available');
+    getLocationFromIP();
+  }
+
+  function getLocationFromIP() {
+    // get location from http://ipinfo.io/json
+    var url = 'http://ipinfo.io/json'
+    var data = null;
+
+    ajax('GET', url, data, function(res) {
+      var result = JSON.parse(res);
+      if ('loc' in result) {
+        var loc = result.loc.split(',');
+        lat = loc[0];
+        lng = loc[1];
+      } else {
+        console.warn('Getting location by IP failed.');
+      }
+      loadNearbyItems();
+    });
+  }
+
+  // -----------------------------------
+  // Login
+  // -----------------------------------
+
+  function login() {
+    var username = document.querySelector('#username').value;
+    var password = document.querySelector('#password').value;
+    password = md5(username + md5(password));
+
+    // The request parameters
+    var url = './login';
+    var req = JSON.stringify({
+      user_id : username,
+      password : password,
+    });
+
+    ajax('POST', url, req,
+      // successful callback
+      function(res) {
+        var result = JSON.parse(res);
+
+        // successfully logged in
+        if (result.status === 'OK') {
+          onSessionValid(result);
+        }
+      },
+
+      // error
+      function() {
+        showLoginError();
+      },
+      true);
+  }
+
+  function showLoginError() {
+    document.querySelector('#login-error').innerHTML = 'Invalid username or password';
+  }
+
+  function clearLoginError() {
+    document.querySelector('#login-error').innerHTML = '';
+  }
+  
+
+
+  // -----------------------------------
+  // Register
+  // -----------------------------------
+
+  function register() {
+    var username = document.querySelector('#register-username').value;
+    var password = document.querySelector('#register-password').value;
+    var firstName = document.querySelector('#register-first-name').value;
+    var lastName = document.querySelector('#register-last-name').value;
+    
+    if (username === "" || password == "" || firstName === "" || lastName === "") {
+    	showRegisterResult('Please fill in all fields');
+    	return
+    }
+    
+    if (username.match(/^[a-z0-9_]+$/) === null) {
+    	showRegisterResult('Invalid username');
+    	return
+    }
+    
+    password = md5(username + md5(password));
+
+    // The request parameters
+    var url = './register';
+    var req = JSON.stringify({
+      user_id : username,
+      password : password,
+      first_name: firstName,
+      last_name: lastName,
+    });
+
+    ajax('POST', url, req,
+      // successful callback
+      function(res) {
+        var result = JSON.parse(res);
+
+        // successfully logged in
+        if (result.status === 'OK') {
+        	showRegisterResult('Succesfully registered');
+        } else {
+        	showRegisterResult('User already existed');
+        }
+      },
+
+      // error
+      function() {
+    	  showRegisterResult('Failed to register');
+      },
+      true);
+  }
+
+  function showRegisterResult(registerMessage) {
+    document.querySelector('#register-result').innerHTML = registerMessage;
+  }
+
+  function clearRegisterResult() {
+    document.querySelector('#register-result').innerHTML = '';
   }
 
 
@@ -109,22 +326,172 @@
     return element;
   }
 
+  /**
+   * AJAX helper
+   *
+   * @param method - GET|POST|PUT|DELETE
+   * @param url - API end point
+   * @param data - request payload data
+   * @param successCallback - Successful callback function
+   * @param errorCallback - Error callback function
+   */
+  function ajax(method, url, data, successCallback, errorCallback) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open(method, url, true);
+
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        successCallback(xhr.responseText);
+      } else {
+        errorCallback();
+      }
+    };
+
+    xhr.onerror = function() {
+      console.error("The request couldn't be completed.");
+      errorCallback();
+    };
+
+    if (data === null) {
+      xhr.send();
+    } else {
+      xhr.setRequestHeader("Content-Type",
+        "application/json;charset=utf-8");
+      xhr.send(data);
+    }
+  }
+
+  // -------------------------------------
+  // AJAX call server-side APIs
+  // -------------------------------------
+
+  /**
+   * API #1 Load the nearby items API end point: [GET]
+   * /search?user_id=1111&lat=37.38&lon=-122.08
+   */
   function loadNearbyItems() {
-  	activeBtn('nearby-btn');
-  	var nearbyItems = mockSearchResponse;
-  	listItems(nearbyItems);
+    console.log('loadNearbyItems');
+    activeBtn('nearby-btn');
+
+    // The request parameters
+    var url = './search';
+    var params = 'user_id=' + user_id + '&lat=' + lat + '&lon=' + lng;
+    var data = null;
+
+    // display loading message
+    showLoadingMessage('Loading nearby items...');
+
+    // make AJAX call
+    ajax('GET', url + '?' + params, data,
+      // successful callback
+      function(res) {
+        var items = JSON.parse(res);
+        if (!items || items.length === 0) {
+          showWarningMessage('No nearby item.');
+        } else {
+          listItems(items);
+        }
+      },
+      // failed callback
+      function() {
+        showErrorMessage('Cannot load nearby items.');
+      }
+    );
   }
-  
+
+  /**
+   * API #2 Load favorite (or visited) items API end point: [GET]
+   * /history?user_id=1111
+   */
   function loadFavoriteItems() {
-  	activeBtn('fav-btn');
-  	var favoriteItems = mockSearchResponse.slice(3, 6);
-  	listItems(favoriteItems);
+    activeBtn('fav-btn');
+
+    // request parameters
+    var url = './history';
+    var params = 'user_id=' + user_id;
+    var req = JSON.stringify({});
+
+    // display loading message
+    showLoadingMessage('Loading favorite items...');
+
+    // make AJAX call
+    ajax('GET', url + '?' + params, req, function(res) {
+      var items = JSON.parse(res);
+      if (!items || items.length === 0) {
+        showWarningMessage('No favorite item.');
+      } else {
+        listItems(items);
+      }
+    }, function() {
+      showErrorMessage('Cannot load favorite items.');
+    });
   }
-  
+
+  /**
+   * API #3 Load recommended items API end point: [GET]
+   * /recommendation?user_id=1111
+   */
   function loadRecommendedItems() {
-  	activeBtn('recommend-btn');
-  	var recommendedItems = mockSearchResponse.slice(10);
-  	listItems(recommendedItems);
+    activeBtn('recommend-btn');
+
+    // request parameters
+    var url = './recommendation' + '?' + 'user_id=' + user_id + '&lat=' + lat + '&lon=' + lng;
+    var data = null;
+
+    // display loading message
+    showLoadingMessage('Loading recommended items...');
+
+    // make AJAX call
+    ajax('GET', url, data,
+      // successful callback
+      function(res) {
+        var items = JSON.parse(res);
+        if (!items || items.length === 0) {
+          showWarningMessage('No recommended item. Make sure you have favorites.');
+        } else {
+          listItems(items);
+        }
+      },
+      // failed callback
+      function() {
+        showErrorMessage('Cannot load recommended items.');
+      }
+    );
+  }
+
+  /**
+   * API #4 Toggle favorite (or visited) items
+   *
+   * @param item_id - The item business id
+   *
+   * API end point: [POST]/[DELETE] /history request json data: {
+   * user_id: 1111, visited: [a_list_of_business_ids] }
+   */
+  function changeFavoriteItem(item_id) {
+	//console.log('test', item_id);
+    // check whether this item has been visited or not
+    var li = document.querySelector('#item-' + item_id);
+    var favIcon = document.querySelector('#fav-icon-' + item_id);
+    var favorite = !(li.dataset.favorite === 'true');
+
+    // request parameters
+    var url = './history';
+    var req = JSON.stringify({
+      user_id: user_id,
+      favorite: [item_id] //这传进来的item_id就是空的
+    });
+    var method = favorite ? 'POST' : 'DELETE';
+
+    ajax(method, url, req,
+      // successful callback
+      function(res) {
+        var result = JSON.parse(res);
+        if (result.status === 'OK' || result.result === 'SUCCESS') {
+          li.dataset.favorite = favorite;
+          favIcon.className = favorite ? 'fa fa-heart' : 'fa fa-heart-o';
+        }
+      });
   }
 
   // -------------------------------------
@@ -169,8 +536,16 @@
    </li>
    */
   function addItem(itemList, item) {
-    var item_id = item.item_id;
-
+	//这里item.Id 写成了item.id, 于是item_id什么也没得到
+	//导致后面传给了onclick event handler的item_id 就是undefine
+	//导致了后面的一系列错误！
+    var item_id = item.item_Id; //not item_id
+    
+//    for debug 
+//    console.log('item line538:', item);
+//    console.log('itemlistline539:',itemList);
+//    console.log('item_id line540', item_id);
+    
     // create the <li> tag and specify the id and class attributes
     var li = $create('li', {
       id: 'item-' + item_id,
@@ -243,7 +618,8 @@
     var favLink = $create('p', {
       className: 'fav-link'
     });
-
+    
+    //item_id is undefine now actually
     favLink.onclick = function() {
       changeFavoriteItem(item_id);
     };
@@ -260,4 +636,3 @@
   init();
 
 })();
-
