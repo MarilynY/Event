@@ -47,15 +47,21 @@ public class MySQLConnection implements DBConnection {
 	public void setFavoriteItems(String userId, List<String> itemIds) {
 		// TODO Auto-generated method stub
 		if (conn == null) {
-			System.err.println("DB Connection failed");
+			System.err.println("DB connection failed");
 			return;
 		}
+//NSERT IGNORE INTO history(user_id, item_id) VALUES (123, ?)
+		//INSERT IGNORE INTO history(user_id, item_id) VALUES (123, vv17fZ4PGklA-kMb);
 		try {
-			//assign columns then fill in values
+//			String sql = "INSERT IGNORE INTO history(user_id, item_id) VALUES ('123', 'vv17fZ4PGklA-kMb')";
+//			PreparedStatement ps = conn.prepareStatement(sql);
+//			ps.execute();
+			System.out.println("check string");
+			System.out.println(itemIds.get(0) instanceof String);
+			
 			String sql = "INSERT IGNORE INTO history(user_id, item_id) VALUES (?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, userId);
-			//add multiple categories 
 			for (String itemId : itemIds) {
 				ps.setString(2, itemId);
 				ps.execute();
@@ -181,6 +187,7 @@ public class MySQLConnection implements DBConnection {
 	/*
 	 * For searchItem servlet
 	 */
+	
 	@Override
 	public List<Item> searchItems(double lat, double lon, String term) {
 		// TODO Auto-generated method stub
