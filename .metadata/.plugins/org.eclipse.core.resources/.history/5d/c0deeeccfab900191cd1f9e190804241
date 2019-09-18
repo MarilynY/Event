@@ -1,5 +1,0 @@
-package external;
-
-public class Config {
-	public static final String TicketMasterAPI_KEY = "bULNetGzavFe0AxywQlHVhka4xLktE9g";
-}

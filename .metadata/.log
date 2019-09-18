@@ -518,3 +518,59 @@ Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.
 
 !ENTRY org.eclipse.jface.text 2 0 2019-08-14 00:08:14.652
 !MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.boolean'
+!SESSION 2019-08-20 11:44:47.555 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_101
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product -keyring /Users/Marilyn/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.jee.product -keyring /Users/Marilyn/.eclipse_keyring
+
+!ENTRY org.eclipse.jface.text 2 0 2019-08-20 11:45:03.720
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.boolean'
+!SESSION 2019-08-20 11:59:26.493 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_101
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product -keyring /Users/Marilyn/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.jee.product -keyring /Users/Marilyn/.eclipse_keyring
+
+!ENTRY org.eclipse.jface.text 2 0 2019-08-20 12:00:03.935
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.boolean'
+
+!ENTRY org.eclipse.jst.server.core 4 0 2019-08-20 13:59:12.645
+!MESSAGE Could not launch in profiling mode because no profilers are configured.
+
+!ENTRY org.eclipse.jface.text 2 0 2019-08-20 14:35:49.628
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.boolean'
+!SESSION 2019-09-02 16:16:59.341 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=12.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product -keyring /Users/Marilyn/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.jee.product -keyring /Users/Marilyn/.eclipse_keyring
+
+!ENTRY org.eclipse.jface.text 2 0 2019-09-02 16:20:14.426
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.boolean'
+!SESSION 2019-09-02 16:37:44.983 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=12.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product -keyring /Users/Marilyn/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.jee.product -keyring /Users/Marilyn/.eclipse_keyring
+
+!ENTRY org.eclipse.jface.text 2 0 2019-09-02 16:39:41.665
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.boolean'
+!SESSION 2019-09-18 16:24:21.802 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=12.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product -keyring /Users/Marilyn/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.jee.product -keyring /Users/Marilyn/.eclipse_keyring
+
+!ENTRY org.eclipse.jface.text 2 0 2019-09-18 16:24:35.157
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.boolean'
